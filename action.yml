@@ -36,6 +36,7 @@ runs:
         if: ${{ !inputs.skip }}
         shell: sh
         run: |
+          cat playwright.config.ts
           npm run pw-tests
         env:
           HOME: /root
