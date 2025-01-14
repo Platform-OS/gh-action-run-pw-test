@@ -20,7 +20,7 @@ runs:
         run: |
           set -eu
           TIMESTAMP=$(date '+%Y%m%d%H%M%S')
-          sed -i "/\['html', { outputFolder: 'playwright-report', open: 'on-failure' }]/s/}/, attachmentBaseURL: 'assets\/images\/${TIMESTAMP}' }/" playwright.config.ts
+          sed -i "/\['html', { outputFolder: 'playwright-report', open: 'on-failure' }]/s/}/, attachmentBaseURL: 'assets\/images' }/" playwright.config.ts
 
           cat playwright.config.ts
 
@@ -54,7 +54,7 @@ runs:
           set -eu
           TIMESTAMP=${{ steps.setup-image-dir.outputs.TIMESTAMP }}
           PAGE_DIR=app/views/pages
-          IMAGE_DIR=app/assets/images/$TIMESTAMP
+          IMAGE_DIR=app/assets/images
 
           cd ./playwright-report
           mkdir -p $PAGE_DIR $IMAGE_DIR
