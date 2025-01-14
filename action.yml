@@ -20,7 +20,7 @@ runs:
         run: |
           set -eu
           TIMESTAMP=$(date '+%Y%m%d%H%M%S')
-          sed -i "/\['html', { outputFolder: 'playwright-report', open: 'on-failure' }]/s/}/, attachmentsBaseURL: 'assets\/images' }/" playwright.config.ts
+          sed -i "/\['html', { outputFolder: 'playwright-report', open: 'on-failure' }]/s/}/, attachmentsBaseURL: 'assets\/images/' }/" playwright.config.ts
           echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_OUTPUT
 
       - name: before ${{ inputs.test-name }}
