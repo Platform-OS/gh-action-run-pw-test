@@ -55,6 +55,10 @@ runs:
 
           cd ./playwright-report
           mkdir -p $PAGE_DIR $IMAGE_DIR
+          pwd
+          ls -la
+          sleep 120
+          ls -la
           mv ./data/* $IMAGE_DIR
           mv ./index.html $PAGE_DIR/$TIMESTAMP.liquid
 
