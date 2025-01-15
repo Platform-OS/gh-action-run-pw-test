@@ -69,6 +69,12 @@ runs:
           echo "REPORT_URL=$URL" >> $GITHUB_OUTPUT
           echo "pw-tests-report-url=$URL" >> $GITHUB_OUTPUT
 
+      - name: remove report directory
+        if:  ${{ !inputs.skip && always() }}
+        shell: sh
+        run: |
+          rm -rf playwright-report
+
       - name: summary
         if:  ${{ !inputs.skip && always() }}
         shell: sh
