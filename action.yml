@@ -55,9 +55,10 @@ runs:
 
           cd ./playwright-report
           if [ -d "./data" ]; then
-              mkdir -p $PAGE_DIR $IMAGE_DIR
+              mkdir -p $IMAGE_DIR
               mv ./data/* $IMAGE_DIR
           fi
+          mkdir -p $PAGE_DIR
           mv ./index.html $PAGE_DIR/$TIMESTAMP.liquid
 
           MPKIT_URL=$UPLOAD_HOST
