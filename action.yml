@@ -14,15 +14,6 @@ runs:
   using: "composite"
   steps:
 
-      - name: setup dir for screenshots
-        id: setup-image-dir
-        shell: sh
-        run: |
-          set -eu
-          TIMESTAMP=$(date '+%Y%m%d%H%M%S')
-          sed -i -E "/\['html', \{[^}]+\}\]/s/\{([^}]+)\}/{\1, attachmentsBaseURL: 'assets\/images\/$TIMESTAMP\/'}/" playwright.config.ts
-          echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_OUTPUT
-
       - name: before ${{ inputs.test-name }}
         if: ${{ inputs.before && !inputs.skip }}
         shell: sh
@@ -49,9 +40,9 @@ runs:
         shell: sh
         run: |
           set -eu
-          TIMESTAMP=${{ steps.setup-image-dir.outputs.TIMESTAMP }}
+          TIMESTAMP=$(date '+%Y%m%d%H%M%S')
           PAGE_DIR=app/views/pages
-          IMAGE_DIR=app/assets/images/$TIMESTAMP
+          IMAGE_DIR=app/assets/images/
 
           cd ./playwright-report
           if [ -d "./data" ]; then
