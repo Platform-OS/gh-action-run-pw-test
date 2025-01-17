@@ -1,6 +1,9 @@
 name: 'Run Playwright tests'
 description: 'Run Playwright tests and upload the report'
 inputs:
+  test-name:
+    description: 'test name'
+    required: true
   before:
     required: false
   after:
@@ -24,7 +27,7 @@ runs:
         if: ${{ !inputs.skip }}
         shell: sh
         run: |
-          npm run pw-tests
+          npm run ${{ inputs.test-name }} --prefix ${{ inputs.npm-prefix }}
         env:
           HOME: /root
 
