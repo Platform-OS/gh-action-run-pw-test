@@ -39,6 +39,9 @@ runs:
 
       - name: publish report ${{ inputs.test-name }}
         id: publish-report
+        env:
+        MPKIT_TOKEN: ${{ env.TEST_REPORT_MPKIT_TOKEN }}
+        MPKIT_URL:  ${{ env.TEST_REPORT_MPKIT_URL }}
         if:  ${{ !inputs.skip && always() }}
         shell: sh
         run: |
