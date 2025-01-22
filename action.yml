@@ -55,7 +55,6 @@ runs:
           mkdir -p $PAGE_DIR
           mv ./index.html $PAGE_DIR/$TIMESTAMP.liquid
 
-          MPKIT_URL=$UPLOAD_HOST
           pos-cli deploy -p
 
           URL=$MPKIT_URL/$TIMESTAMP
