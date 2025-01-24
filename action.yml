@@ -37,28 +37,12 @@ runs:
         run: |
           ${{ inputs.after }}
 
-      - name: set timestamp
-        id: set-timestamp
-        if:  ${{ !inputs.skip && always() }}
-        shell: sh
-        run: |
-          TIMESTAMP=$(date '+%Y%m%d%H%M%S')
-          echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_OUTPUT
-          echo "PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL=${{ env.PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL }}/$TIMESTAMP" >> $GITHUB_OUTPUT
-        env:
-          PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL: ${{ env.PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL }}
-
       - name: publish report ${{ inputs.test-name }}
         id: publish-report
-        env:
-          MPKIT_TOKEN: ${{ env.TEST_REPORT_MPKIT_TOKEN }}
-          MPKIT_URL:  ${{ env.TEST_REPORT_MPKIT_URL }}
-          PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL: ${{ steps.set-timestamp.outputs.PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL }}
         if:  ${{ !inputs.skip && always() }}
         shell: sh
         run: |
           set -eu
-          TIMESTAMP=${{ steps.set-timestamp.outputs.TIMESTAMP }}
           PAGE_DIR=app/views/pages
           IMAGE_DIR=app/assets/images/$TIMESTAMP
 
