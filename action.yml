@@ -51,12 +51,12 @@ runs:
         env:
           MPKIT_TOKEN: ${{ env.TEST_REPORT_MPKIT_TOKEN }}
           MPKIT_URL:  ${{ env.TEST_REPORT_MPKIT_URL }}
-          PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL: ${{ needs.set-timestamp.outputs.PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL }}
+          PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL: ${{ steps.set-timestamp.outputs.PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL }}
         if:  ${{ !inputs.skip && always() }}
         shell: sh
         run: |
           set -eu
-          TIMESTAMP=${{ needs.set-timestamp.outputs.TIMESTAMP }}
+          TIMESTAMP=${{ steps.set-timestamp.outputs.TIMESTAMP }}
           PAGE_DIR=app/views/pages
           IMAGE_DIR=app/assets/images/playwright-report/$TIMESTAMP
 
