@@ -60,7 +60,7 @@ runs:
           set -eu
           TIMESTAMP=${{ steps.set-timestamp.outputs.TIMESTAMP }}
           PAGE_DIR=app/views/pages
-          IMAGE_DIR=app/assets/images/playwright-report/$TIMESTAMP
+          IMAGE_DIR=app/assets/images/$TIMESTAMP
 
           cd ./playwright-report
           if [ -d "./data" ]; then
