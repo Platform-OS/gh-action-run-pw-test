@@ -43,11 +43,11 @@ runs:
           MPKIT_TOKEN: ${{ env.TEST_REPORT_MPKIT_TOKEN }}
           MPKIT_URL:  ${{ env.TEST_REPORT_MPKIT_URL }}
           PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL: ${{ env.PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL }}
-          TIMESTAMP: ${{ env.TIMESTAMP }}
         if:  ${{ !inputs.skip && always() }}
         shell: sh
         run: |
           set -eu
+          TIMESTAMP=$(date '+%Y%m%d%H%M%S')
           PAGE_DIR=app/views/pages
           IMAGE_DIR=app/assets/images/$TIMESTAMP
 
