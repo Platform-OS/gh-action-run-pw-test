@@ -40,12 +40,14 @@ runs:
       - name: generate timestamp
         id: timestamp
         if:  ${{ !inputs.skip && always() }}
+        shell: sh
         run: |
           echo "TIMESTAMP=$(date '+%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
 
       - name: set url for playwright attachments
         id: set-playwright-html-attachments-base-url
         if:  ${{ !inputs.skip && always() }}
+        shell: sh
         run: |
           echo "PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL=${{ env.PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL }}/${{ steps.timestamp.outputs.timestamp }}" >> $GITHUB_OUTPUT
 
