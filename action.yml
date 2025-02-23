@@ -41,7 +41,7 @@ runs:
       if:  ${{ !inputs.skip && always() }}
       shell: sh
       run: |
-        echo "PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL=${{ env.HTML_ATTACHMENTS_BASE_URL }}/${{ steps.timestamp.outputs.timestamp }}" >> $GITHUB_ENV
+        echo "PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL=${{ env.HTML_ATTACHMENTS_BASE_URL }}/${{ steps.timestamp.outputs.timestamp }}/" >> $GITHUB_ENV
 
     - name: run ${{ inputs.test-name }}
       if: ${{ !inputs.skip }}
