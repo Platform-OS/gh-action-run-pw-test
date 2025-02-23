@@ -17,85 +17,86 @@ runs:
   using: "composite"
   steps:
 
-      - name: before ${{ inputs.test-name }}
-        if: ${{ inputs.before && !inputs.skip }}
-        shell: sh
-        run: |
-          ${{ inputs.before }}
+    - name: before ${{ inputs.test-name }}
+      if: ${{ inputs.before && !inputs.skip }}
+      shell: sh
+      run: |
 
-      - name: run ${{ inputs.test-name }}
-        if: ${{ !inputs.skip }}
-        shell: sh
-        run: |
-          npm run ${{ inputs.test-name }} --prefix ${{ inputs.npm-prefix }}
-        env:
-          HOME: /root
+    - name: after ${{ inputs.test-name }}
+      if: ${{ inputs.after && !inputs.skip }}
+      shell: sh
+      run: |
+        ${{ inputs.after }}
+        ${{ inputs.before }}
 
-      - name: after ${{ inputs.test-name }}
-        if: ${{ inputs.after && !inputs.skip }}
-        shell: sh
-        run: |
-          ${{ inputs.after }}
+    - name: generate timestamp
+      id: timestamp
+      if:  ${{ !inputs.skip && always() }}
+      shell: sh
+      run: |
+        echo "TIMESTAMP=$(date '+%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
 
-      - name: generate timestamp
-        id: timestamp
-        if:  ${{ !inputs.skip && always() }}
-        shell: sh
-        run: |
-          echo "TIMESTAMP=$(date '+%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
+    - name: set url for playwright attachments
+      id: set-playwright-html-attachments-base-url
+      if:  ${{ !inputs.skip && always() }}
+      shell: sh
+      run: |
+        echo "PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL=${{ env.HTML_ATTACHMENTS_BASE_URL }}/${{ steps.timestamp.outputs.timestamp }}" >> $GITHUB_ENV
 
-      - name: set url for playwright attachments
-        id: set-playwright-html-attachments-base-url
-        if:  ${{ !inputs.skip && always() }}
-        shell: sh
-        run: |
-          echo "PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL=${{ env.HTML_ATTACHMENTS_BASE_URL }}/${{ steps.timestamp.outputs.timestamp }}" >> $GITHUB_ENV
+    - name: run ${{ inputs.test-name }}
+      if: ${{ !inputs.skip }}
+      shell: sh
+      run: |
+        npm run ${{ inputs.test-name }} --prefix ${{ inputs.npm-prefix }}
+      env:
+        HOME: /root
+        PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL: ${{ env.PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL }}
 
-      - name: publish report ${{ inputs.test-name }}
-        id: publish-report
-        env:
-          MPKIT_TOKEN: ${{ env.TEST_REPORT_MPKIT_TOKEN }}
-          MPKIT_URL:  ${{ env.TEST_REPORT_MPKIT_URL }}
-          PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL: ${{ env.PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL }}
-        if:  ${{ !inputs.skip && always() }}
-        shell: sh
-        run: |
-          set -eu
-          TIMESTAMP=${{ steps.timestamp.outputs.TIMESTAMP }}
-          PAGE_DIR=app/views/pages
-          IMAGE_DIR=app/assets/images/$TIMESTAMP
+    - name: publish report ${{ inputs.test-name }}
+      id: publish-report
+      env:
+        MPKIT_TOKEN: ${{ env.TEST_REPORT_MPKIT_TOKEN }}
+        MPKIT_URL:  ${{ env.TEST_REPORT_MPKIT_URL }}
+        PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL: ${{ env.PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL }}
+      if:  ${{ !inputs.skip && always() }}
+      shell: sh
+      run: |
+        set -eu
+        TIMESTAMP=${{ steps.timestamp.outputs.TIMESTAMP }}
+        PAGE_DIR=app/views/pages
+        IMAGE_DIR=app/assets/images/$TIMESTAMP
 
-          cd ./playwright-report
-          if [ -d "./data" ]; then
-              mkdir -p $IMAGE_DIR
-              mv ./data/* $IMAGE_DIR
-          fi
-          mkdir -p $PAGE_DIR
-          mv ./index.html $PAGE_DIR/$TIMESTAMP.liquid
+        cd ./playwright-report
+        if [ -d "./data" ]; then
+            mkdir -p $IMAGE_DIR
+            mv ./data/* $IMAGE_DIR
+        fi
+        mkdir -p $PAGE_DIR
+        mv ./index.html $PAGE_DIR/$TIMESTAMP.liquid
 
-          pos-cli deploy -p
+        pos-cli deploy -p
 
-          URL=$MPKIT_URL/$TIMESTAMP
-          echo "REPORT_URL=$URL" >> $GITHUB_OUTPUT
-          echo "pw-tests-report-url=$URL" >> $GITHUB_OUTPUT
+        URL=$MPKIT_URL/$TIMESTAMP
+        echo "REPORT_URL=$URL" >> $GITHUB_OUTPUT
+        echo "pw-tests-report-url=$URL" >> $GITHUB_OUTPUT
 
-      - name: remove report artifacts
-        if:  ${{ !inputs.skip && always() }}
-        shell: sh
-        run: |
-          rm -rf playwright-report
-          rm -rf test-results
+    - name: remove report artifacts
+      if:  ${{ !inputs.skip && always() }}
+      shell: sh
+      run: |
+        rm -rf playwright-report
+        rm -rf test-results
 
-      - name: summary
-        if:  ${{ !inputs.skip && always() }}
-        shell: sh
-        run: |
-          echo "### TEST REPORT" >> $GITHUB_STEP_SUMMARY
-          echo "#### Status: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
-          echo "#### Test report URL: ${{ steps.publish-report.outputs.REPORT_URL }}" >> $GITHUB_STEP_SUMMARY
+    - name: summary
+      if:  ${{ !inputs.skip && always() }}
+      shell: sh
+      run: |
+        echo "### TEST REPORT" >> $GITHUB_STEP_SUMMARY
+        echo "#### Status: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+        echo "#### Test report URL: ${{ steps.publish-report.outputs.REPORT_URL }}" >> $GITHUB_STEP_SUMMARY
 
-      - name: skip ${{ inputs.test-name }}
-        if: ${{ !!inputs.skip }}
-        shell: sh
-        run: echo skipping ${{ inputs.test-name }}
+    - name: skip ${{ inputs.test-name }}
+      if: ${{ !!inputs.skip }}
+      shell: sh
+      run: echo skipping ${{ inputs.test-name }}
 
