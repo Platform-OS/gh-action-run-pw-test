@@ -50,7 +50,6 @@ runs:
       run: |
         npm run ${{ inputs.test-name }} --prefix ${{ inputs.npm-prefix }}
       env:
-        HOME: /root
         PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL: ${{ env.PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL }}
 
     - name: publish report ${{ inputs.test-name }}
