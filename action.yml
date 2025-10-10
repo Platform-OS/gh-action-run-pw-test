@@ -63,20 +63,21 @@ runs:
       run: |
         set -eu
         TIMESTAMP=${{ steps.timestamp.outputs.TIMESTAMP }}
-        PAGE_DIR=app/assets
-        IMAGE_DIR=app/assets/images/$TIMESTAMP
+        PAGE_DIR=app/assets/$TIMESTAMP
+        # IMAGE_DIR=app/assets/images/$TIMESTAMP
 
         cd ./playwright-report
-        if [ -d "./data" ]; then
-            mkdir -p $IMAGE_DIR
-            mv ./data/* $IMAGE_DIR
-        fi
+
         mkdir -p $PAGE_DIR
-        mv ./index.html $PAGE_DIR/$TIMESTAMP.html
+        mv ./index.html $PAGE_DIR/index.html
+
+        if [ -d "./data" ]; then
+            mv ./data/* $PAGE_DIR/data
+        fi
 
         pos-cli deploy -p
 
-        URL=$MPKIT_URL/$TIMESTAMP
+        URL=$MPKIT_URL/assets/$TIMESTAMP
         echo "REPORT_URL=$URL" >> $GITHUB_OUTPUT
         echo "pw-tests-report-url=$URL" >> $GITHUB_OUTPUT
 
