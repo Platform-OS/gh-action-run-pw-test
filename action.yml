@@ -72,12 +72,12 @@ runs:
         mv ./index.html $PAGE_DIR/index.html
 
         if [ -d "./data" ]; then
-            mv ./data/* $PAGE_DIR/data
+            mv ./data/ $PAGE_DIR/data
         fi
 
         pos-cli deploy -p
 
-        URL=$MPKIT_URL/assets/$TIMESTAMP
+        URL=$MPKIT_URL/assets/$TIMESTAMP/index.html
         echo "REPORT_URL=$URL" >> $GITHUB_OUTPUT
         echo "pw-tests-report-url=$URL" >> $GITHUB_OUTPUT
 
