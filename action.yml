@@ -63,7 +63,7 @@ runs:
       run: |
         set -eu
         TIMESTAMP=${{ steps.timestamp.outputs.TIMESTAMP }}
-        PAGE_DIR=app/views/pages
+        PAGE_DIR=app/assets
         IMAGE_DIR=app/assets/images/$TIMESTAMP
 
         cd ./playwright-report
