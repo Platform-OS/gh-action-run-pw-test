@@ -72,7 +72,7 @@ runs:
             mv ./data/* $IMAGE_DIR
         fi
         mkdir -p $PAGE_DIR
-        mv ./index.html $PAGE_DIR/$TIMESTAMP.liquid
+        mv ./index.html $PAGE_DIR/$TIMESTAMP.html
 
         pos-cli deploy -p
 
