@@ -41,7 +41,7 @@ runs:
       if:  ${{ !inputs.skip && always() }}
       shell: sh
       run: |
-        echo "PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL=${{ env.HTML_ATTACHMENTS_BASE_URL }}/${{ steps.timestamp.outputs.TIMESTAMP }}/data/" >> $GITHUB_ENV
+        echo "PLAYWRIGHT_HTML_ATTACHMENTS_BASE_URL=${{ env.HTML_ATTACHMENTS_BASE_URL }}/${{ steps.timestamp.outputs.TIMESTAMP }}/" >> $GITHUB_ENV
 
     - name: run ${{ inputs.test-name }}
       id: run-tests
@@ -64,6 +64,7 @@ runs:
         set -eu
         TIMESTAMP=${{ steps.timestamp.outputs.TIMESTAMP }}
         PAGE_DIR=app/assets/$TIMESTAMP
+        IMAGE_DIR=app/assets/images/$TIMESTAMP
 
         cd ./playwright-report
 
@@ -71,7 +72,8 @@ runs:
         mv ./index.html $PAGE_DIR/index.html
 
         if [ -d "./data" ]; then
-            mv ./data/ $PAGE_DIR/data
+            mkdir -p $IMAGE_DIR
+            mv ./data/* $IMAGE_DIR/
         fi
 
         pos-cli deploy -p
