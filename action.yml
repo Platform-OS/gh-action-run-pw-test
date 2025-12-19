@@ -94,8 +94,9 @@ runs:
       shell: sh
       run: |
         echo "### TEST REPORT for ${{ inputs.test-name }}" >> $GITHUB_STEP_SUMMARY
-        echo "#### Status: ${{ steps.run-tests.outcome }}" >> $GITHUB_STEP_SUMMARY
+        echo "#### Status: ${{ steps.run-tests.outcome }} ${{ steps.run-tests.outcome == 'success' && ':white_check_mark:' || ':x:' }}" >> $GITHUB_STEP_SUMMARY
         echo "#### Test report URL: ${{ steps.publish-report.outputs.REPORT_URL }}" >> $GITHUB_STEP_SUMMARY
+        echo "----------------------------------------------------" >> $GITHUB_STEP_SUMMARY
 
     - name: skip ${{ inputs.test-name }}
       if: ${{ !!inputs.skip }}
